@@ -31,12 +31,16 @@ RUN useradd -ms /bin/bash myuser
 # Switch to the 'www-data' user to avoid running as root
 USER www-data
 
+# Set file and directory permissions to ensure proper access
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 775 /var/www/html
+
 # Install Laravel dependencies using Composer
 RUN /usr/local/bin/composer install --no-dev --optimize-autoloader
 
-# Fix permissions to ensure the 'www-data' user has the right access
-RUN chown -R www-data:www-data /var/www/html
-RUN chmod -R 755 /var/www/html
+# Ensure the permissions are correct after Composer installation
+RUN chown -R www-data:www-data /var/www/html/vendor
+RUN chmod -R 775 /var/www/html/vendor
 
 # Set the port environment variable
 ENV PORT 8080

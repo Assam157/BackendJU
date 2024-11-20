@@ -328,6 +328,7 @@ $mongoClient = new MongoDB\Client(
     ]
 );
 
+
 $db = $mongoClient->selectDatabase('my_database');
 $productCollection = $db->selectCollection('products');
 $db1=$mongoClient->selectDatabase('User_Database');

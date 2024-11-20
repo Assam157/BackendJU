@@ -318,16 +318,6 @@ $app->add(function ($request, $handler) {
 
  $mongoClient = new MongoDB\Client(
     "mongodb+srv://Maitreya:killdill12@cluster0.sk6ugig.mongodb.net/?retryWrites=true&w=majority",
-    [
-        'ssl' => true,           // Explicitly enable SSL
-        'ssl_ca_certs' => '/path/to/cacert.pem'  // Path to CA certificate file if needed
-    ],
-    [
-        'typeMap' => [
-            'root' => 'array',
-            'document' => 'array',
-        ],
-    ]
 );
 
 

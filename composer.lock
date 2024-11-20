@@ -24,7 +24,8 @@
                 "psr-4": {
                     "Fruitcake\\Cors\\": "src/"
                 }
-            },
+            }
+},
 {
            "name": "illuminate/support",
             "version": "v11.0.0",

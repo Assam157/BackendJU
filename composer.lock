@@ -25,12 +25,26 @@
                     "Fruitcake\\Cors\\": "src/"
                 }
             },
-            "require": {
-                "php": "^7.4|^8.0",
-                "illuminate/support": "^8.0|^9.0|^10.0"
+{
+           "name": "illuminate/support",
+            "version": "v11.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/framework.git",
+                "reference": "some-reference"
             },
-            "time": "2023-09-01T00:00:00+00:00"
+            "dist": {
+                "type": "tar",
+                "url": "https://api.github.com/repos/laravel/framework/tarball/some-reference",
+                "reference": "some-reference",
+                "shasum": ""
+            },
+            "type": "library",
+            "install-path": "vendor/illuminate/support",
+            "aliases": [],
+            "dev": false
         },
+},
         {
             "name": "laravel/sail",
             "version": "1.16.0",

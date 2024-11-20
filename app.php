@@ -12,6 +12,7 @@ use Slim\Views\PhpRenderer;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Razorpay\Api\Api;
+use Slim\Middleware\CorsMiddleware;
  
 
 // Start the session

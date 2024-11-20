@@ -1,5 +1,9 @@
  <?php
 
+header("Access-Control-Allow-Origin: https://cartpage-g20s.onrender.com");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
 // Autoload dependencies
 require 'vendor/autoload.php';
 

@@ -814,6 +814,7 @@ function addCorsHeaders($response) {
         ->withHeader('Access-Control-Allow-Origin', '*', 'https://cartpage-g20s.onrender.com') // Allow all origins; replace '*' with specific origin if needed
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
         ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        ->withHeader('Access-Control-Allow-Credentials', 'true');  
 }
 
  

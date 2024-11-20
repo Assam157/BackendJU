@@ -4,15 +4,15 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "type": "project",
-    "require": {
-        "php": "^8.2",
-        "fideloper/proxy": "^4.4",
-        "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^7.0.1",
-        "jenssegers/mongodb": "^5.1", 
-        "laravel/framework": "^10.0",
-        "laravel/tinker": "^2.7"
-    },
+     "require": {
+    "php": "^8.2",
+    "fideloper/proxy": "^4.4",
+    "fruitcake/laravel-cors": "^2.0",
+    "guzzlehttp/guzzle": "^7.0.1",
+    "jenssegers/mongodb": "^5.1",
+    "laravel/framework": "^11.0",
+    "laravel/tinker": "^2.7"
+},
     "require-dev": {
         "facade/ignition": "^2.5",
         "fzaninotto/faker": "^1.9.1",

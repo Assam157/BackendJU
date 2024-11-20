@@ -32,5 +32,6 @@ EXPOSE 8080
 # Use artisan to start the Laravel application on the correct port
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=$PORT"]
 
-RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
+RUN chown -R www-data:www-data /var/www 
+RUN chmod -R 755 /var/www/html
 

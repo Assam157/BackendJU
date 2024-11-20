@@ -21,6 +21,7 @@ COPY . .
 # Install Laravel dependencies using Composer
 RUN /usr/local/bin/composer install --no-dev --optimize-autoloader
 
+ENV PORT 8080
 # Expose the port to be used by Laravel
 EXPOSE 8080
 

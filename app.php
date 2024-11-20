@@ -688,13 +688,6 @@ $app->delete('/api/products/{name}/{type}', function ($request, $response, $args
         ->withStatus(200);
     }
 });
-$app->options('/api/products/{name}/{type}', function ($request, $response) {
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*') // Allow all origins, adjust as needed
-        ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, DELETE') // Allow DELETE method
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization') // Allow required headers
-        ->withStatus(200); // Return 200 status for OPTIONS request
-});
 
 
 $app->options('/api/products', function($request, $response) {

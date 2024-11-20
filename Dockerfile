@@ -33,13 +33,13 @@ USER root
 
 # Change the ownership of files and directories to www-data (root is required here)
 RUN chown -R www-data:www-data /var/www/html
-RUN chmod -R 775 /var/www/html
+ 
 
 # Switch back to the 'www-data' user for the rest of the operations
 USER www-data
 
 # Install Laravel dependencies using Composer
-RUN /usr/local/bin/composer install --no-dev --optimize-autoloader
+RUN /usr/local/bin/composer install --no-dev --optimize-autoloader --with-all-dependencies (-W)
 
 # Ensure the permissions are correct after Composer installation
 RUN chown -R www-data:www-data /var/www/html/vendor

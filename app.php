@@ -3,6 +3,12 @@
 header("Access-Control-Allow-Origin: https://cartpage-g20s.onrender.com");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    // Respond with CORS headers for OPTIONS request
+    header("Access-Control-Allow-Origin: https://cartpage-g20s.onrender.com");
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Exit after responding to OPTIONS request
+}
 
 // Autoload dependencies
 require 'vendor/autoload.php';

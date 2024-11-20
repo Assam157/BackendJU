@@ -317,7 +317,17 @@ $app->add(function ($request, $handler) {
 });
 
 // MongoDB connection
-$mongoClient = new MongoClient("mongodb+srv://Maitreya:killdill12@cluster0.sk6ugig.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+$mongoClient = new MongoDB\Client(
+    "mongodb+srv://Maitreya:killdill12@cluster0.sk6ugig.mongodb.net/?retryWrites=true&w=majority",
+    [],
+    [
+        'typeMap' => [
+            'root' => 'array',
+            'document' => 'array',
+        ],
+    ]
+);
+
 $db = $mongoClient->selectDatabase('my_database');
 $productCollection = $db->selectCollection('products');
 $db1=$mongoClient->selectDatabase('User_Database');

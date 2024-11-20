@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     pkg-config \
     libcurl4-openssl-dev \
+    openssl \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions required for Laravel (e.g., GD for image processing, etc.)

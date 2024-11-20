@@ -1,4 +1,4 @@
- FROM php:8.2-fpm
+  FROM php:8.2-fpm
 
 # Install system dependencies, curl, unzip, and libraries required by Composer
 RUN apt-get update && apt-get install -y \
@@ -33,8 +33,6 @@ USER root
 
 # Change the ownership of files and directories to www-data (root is required here)
 RUN chown -R www-data:www-data /var/www/html
- 
-
 # Switch back to the 'www-data' user for the rest of the operations
 USER www-data
 
@@ -52,5 +50,4 @@ ENV PORT 8080
 EXPOSE 8080
 
 # Use artisan to start the Laravel application on the correct port
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=$PORT"]
-
+CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"]

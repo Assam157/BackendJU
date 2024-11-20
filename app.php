@@ -593,7 +593,9 @@ function seedDatabase($productCollection) {
 $app->get('/api/products', function (Request $request, Response $response) use ($productCollection) {
     $products = $productCollection->find()->toArray();
     $response->getBody()->write(json_encode($products));
-    return addCorsHeaders($response)->withHeader('Content-Type', 'application/json');
+    return addCorsHeaders($response)->withHeader('Content-Type', 'application/json')->withHeader('Access-Control-Allow-Origin', '*', 'https://cartpage-g20s.onrender.com') // Allow all origins; replace '*' with specific origin if needed
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');;
 });
 
 // POST route for handling form submissions
@@ -608,7 +610,9 @@ $app->post('/api/products', function ($request,$response) use ($productCollectio
     if (empty($data['name']) || empty($data['type']) || empty($data['price'])) {
         // Send an error response if data is invalid
         $response->getBody()->write(json_encode(['error' => 'Invalid input']));
-        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        return addCorsHeader($response)->withStatus(400)->withHeader('Content-Type', 'application/json')->withHeader('Access-Control-Allow-Origin', '*', 'https://cartpage-g20s.onrender.com') // Allow all origins; replace '*' with specific origin if needed
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');;
     }
 
     try {

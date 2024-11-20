@@ -39,7 +39,7 @@ RUN chown -R www-data:www-data /var/www/html
 USER www-data
 
 # Install Laravel dependencies using Composer
-RUN /usr/local/bin/composer install --no-dev --optimize-autoloader --with-all-dependencies (-W)
+RUN /usr/local/bin/composer install --no-dev --optimize-autoloader --with-all-dependencies 
 
 # Ensure the permissions are correct after Composer installation
 RUN chown -R www-data:www-data /var/www/html/vendor

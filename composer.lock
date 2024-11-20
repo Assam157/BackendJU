@@ -26,25 +26,8 @@
                 }
             }
 },
-{
-           "name": "illuminate/support",
-            "version": "v9.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/framework.git",
-                "reference": "some-reference"
-            },
-            "dist": {
-                "type": "tar",
-                "url": "https://api.github.com/repos/laravel/framework/tarball/some-reference",
-                "reference": "some-reference",
-                "shasum": ""
-            },
-            "type": "library",
-            "install-path": "vendor/illuminate/support",
-            "aliases": [],
-            "dev": false
-        },
+ 
+           
  
         {
             "name": "laravel/sail",

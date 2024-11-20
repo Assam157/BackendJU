@@ -433,6 +433,10 @@ $app->options('/get_products',function($request,$response){
 $app->options('/update_product_stock',function($request,$response){
     return addCorsHeaders($response)->withStatus(200);
 });
+ 
+$app->options('/api/products',function (Request $request, Response $response){
+    return addCorsHeaders($response)->withHeader('Content-Type', 'application/json');
+});
 // Route to fetch all products from the ProductCollection
 $app->get('/get_products', function ($request, $response) use ($productCollection) {
     // Retrieve all products from the collection

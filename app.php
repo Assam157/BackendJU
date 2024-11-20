@@ -198,6 +198,9 @@ $app = AppFactory::create();
 
 // Enable the body parsing middleware (for JSON, form data, etc.)
 $app->addBodyParsingMiddleware();
+
+$app->add($corsMiddleware);
+
  
  $app->add(function (Request $request, Response $response) {
     // Modify the response to include CORS headers

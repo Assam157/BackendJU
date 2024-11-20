@@ -237,17 +237,18 @@ $app->addBodyParsingMiddleware();
     }
 });
  
-$app->add(function ($request, $response, $next) {
-    // Set CORS headers
-    $response = $response
-        ->withHeader('Access-Control-Allow-Origin', 'https://cartpage-g20s.onrender.com')  // Allow specific origin
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')             // Allow specific methods
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')       // Allow specific headers
-        ->withHeader('Access-Control-Allow-Credentials', 'true');                         // Allow credentials (cookies)
+ $app->add(function (Psr\Http\Message\ServerRequestInterface $request, RequestHandlerInterface $handler): Psr\Http\Message\ResponseInterface {
+    // Process the next middleware and get the response
+    $response = $handler->handle($request);
 
-    // Allow the request to proceed
-    return $next($request, $response);
+    // Add CORS headers to the response
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', 'https://cartpage-g20s.onrender.com') // Allow specific origin
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')  // Allow specific methods
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')     // Allow specific headers
+        ->withHeader('Access-Control-Allow-Credentials', 'true');                       // Allow credentials (cookies)
 });
+
 
 // Handle OPTIONS preflight requests
 $app->options('/{routes:.+}', function ($request, $response, $args) {

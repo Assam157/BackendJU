@@ -6,6 +6,81 @@
     ],
     "content-hash": "d70623c50c5360f842d3167222b3e4d4",
     "packages": [
+{
+            "name": "fruitcake/laravel-cors",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fruitcake/laravel-cors.git",
+                "reference": "b95b55a98beff66cbe0a79d865acfa35de059e0f"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://api.github.com/repos/fruitcake/laravel-cors/tarball/b95b55a98beff66cbe0a79d865acfa35de059e0f",
+                "reference": "b95b55a98beff66cbe0a79d865acfa35de059e0f",
+                "shasum": ""
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fruitcake\\Cors\\": "src/"
+                }
+            },
+            "require": {
+                "php": "^7.4|^8.0",
+                "illuminate/support": "^8.0|^9.0|^10.0"
+            },
+            "time": "2023-09-01T00:00:00+00:00"
+        },
+        {
+            "name": "laravel/sail",
+            "version": "1.16.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/sail.git",
+                "reference": "e81d153cf4563b12381a26d73940a6f92b777b02"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://api.github.com/repos/laravel/sail/tarball/e81d153cf4563b12381a26d73940a6f92b777b02",
+                "reference": "e81d153cf4563b12381a26d73940a6f92b777b02",
+                "shasum": ""
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Sail\\": "src/"
+                }
+            },
+            "require": {
+                "php": "^7.4|^8.0",
+                "illuminate/support": "^8.0|^9.0|^10.0"
+            },
+            "time": "2023-09-01T00:00:00+00:00"
+        },
+        {
+            "name": "laravel/sanctum",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/sanctum.git",
+                "reference": "f87b168fd2e5b35a6f507a79ea1345b31b1d84b7"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://api.github.com/repos/laravel/sanctum/tarball/f87b168fd2e5b35a6f507a79ea1345b31b1d84b7",
+                "reference": "f87b168fd2e5b35a6f507a79ea1345b31b1d84b7",
+                "shasum": ""
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Sanctum\\": "src/"
+                }
+            },
+            "require": {
+                "php": "^7.4|^8.0",
+                "illuminate/support": "^8.0|^9.0|^10.0"
+            },
+            "time": "2023-09-01T00:00:00+00:00"
+        },
         {
             "name": "brick/math",
             "version": "0.12.1",

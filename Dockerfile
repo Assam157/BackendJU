@@ -17,9 +17,13 @@ WORKDIR /var/www/html
 
 # Copy application files into the container
 COPY . .
+ # Add a new user and use it
+RUN useradd -ms /bin/bash myuser
+USER myuser
 
-# Install Laravel dependencies using Composer
+# Now run Composer as the new user
 RUN /usr/local/bin/composer install --no-dev --optimize-autoloader
+
 
 ENV PORT 8080
 # Expose the port to be used by Laravel

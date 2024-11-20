@@ -28,12 +28,15 @@ COPY . .
 # Add a new user and change ownership of the directory to that user
 RUN useradd -ms /bin/bash myuser
 
-# Switch to the 'www-data' user to avoid running as root
-USER www-data
+# Switch to the 'root' user temporarily for chown
+USER root
 
-# Set file and directory permissions to ensure proper access
+# Change the ownership of files and directories to www-data (root is required here)
 RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 775 /var/www/html
+
+# Switch back to the 'www-data' user for the rest of the operations
+USER www-data
 
 # Install Laravel dependencies using Composer
 RUN /usr/local/bin/composer install --no-dev --optimize-autoloader
@@ -50,5 +53,4 @@ EXPOSE 8080
 
 # Use artisan to start the Laravel application on the correct port
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=$PORT"]
-
 

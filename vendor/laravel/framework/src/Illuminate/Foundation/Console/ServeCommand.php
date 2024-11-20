@@ -210,7 +210,7 @@ class ServeCommand extends Command
             [, $port] = $this->getHostAndPort();
         }
 
-        $port = $port ?: 8000;
+        $port = (int)($port ?: 8000);
 
         return $port + $this->portOffset;
     }

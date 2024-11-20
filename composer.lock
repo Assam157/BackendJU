@@ -210,6 +210,17 @@
             },
             "time": "2024-07-08T12:26:09+00:00"
         },
+{
+    "name": "fideloper/proxy",
+    "version": "4.4.x",
+    "source": { ... }
+},
+{
+    "name": "fruitcake/laravel-cors",
+    "version": "2.x",
+    "source": { ... }
+}
+,
         {
             "name": "doctrine/cache",
             "version": "2.2.0",

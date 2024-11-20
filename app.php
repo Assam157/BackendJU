@@ -202,14 +202,17 @@ $app->addBodyParsingMiddleware();
  
 
  
- $app->add(function (Request $request, Response $response) {
+ $app->add(function (Request $request, Psr\Http\Server\RequestHandlerInterface $handler) {
+    // Get the response from the handler
+    $response = $handler->handle($request);
+
     // Modify the response to include CORS headers
     $response = $response
         ->withHeader('Access-Control-Allow-Origin', '*') // Change '*' to a specific origin for security
         ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    
-    // Check if the request method is OPTIONS and return immediately
+
+    // Handle OPTIONS method for preflight requests
     if ($request->getMethod() === 'OPTIONS') {
         return $response->withStatus(200);
     }
@@ -217,6 +220,7 @@ $app->addBodyParsingMiddleware();
     // Return the modified response
     return $response;
 });
+
 
 
 

@@ -1,16 +1,6 @@
  <?php
 
-header("Access-Control-Allow-Origin: https://cartpage-g20s.onrender.com");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    // Respond with CORS headers for OPTIONS request
-    header("Access-Control-Allow-Origin: https://cartpage-g20s.onrender.com");
-    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-    header("Access-Control-Allow-Headers: Content-Type, Authorization"); 
-    exit;// Exit after responding to OPTIONS request
-}
-
+ 
 // Autoload dependencies
 require 'vendor/autoload.php';
 
@@ -25,7 +15,7 @@ use Razorpay\Api\Api;
  
 
 // Start the session
-session_start();
+ 
  
 $port = getenv('PORT') ?: 8080;
 
@@ -321,9 +311,7 @@ $app->add(function ($request, $handler) {
 
 // Custom session middleware to ensure session is started
 $app->add(function ($request, $handler) {
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
-    }
+     
     return $handler->handle($request);
 });
 

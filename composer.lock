@@ -50,31 +50,7 @@
             }
 },
 
-        {
-            "name": "laravel/sanctum",
-            "version": "3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/sanctum.git",
-                "reference": "f87b168fd2e5b35a6f507a79ea1345b31b1d84b7"
-            },
-            "dist": {
-                "type": "tar",
-                "url": "https://api.github.com/repos/laravel/sanctum/tarball/f87b168fd2e5b35a6f507a79ea1345b31b1d84b7",
-                "reference": "f87b168fd2e5b35a6f507a79ea1345b31b1d84b7",
-                "shasum": ""
-            },
-            "autoload": {
-                "psr-4": {
-                    "Laravel\\Sanctum\\": "src/"
-                }
-            },
-            "require": {
-                "php": "^7.4|^8.0",
-                "illuminate/support": "^8.0|^9.0|^10.0"
-            },
-            "time": "2023-09-01T00:00:00+00:00"
-        },
+       
         {
             "name": "brick/math",
             "version": "0.12.1",

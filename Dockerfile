@@ -19,9 +19,7 @@ WORKDIR /var/www/html
 COPY . .
  # Add a new user and use it
 RUN useradd -ms /bin/bash myuser
-USER myuser
-
-# Now run Composer as the new user
+USER www-data
 RUN /usr/local/bin/composer install --no-dev --optimize-autoloader
 
 

@@ -237,6 +237,27 @@ $app->addBodyParsingMiddleware();
     }
 });
  
+$app->add(function ($request, $response, $next) {
+    // Set CORS headers
+    $response = $response
+        ->withHeader('Access-Control-Allow-Origin', 'https://cartpage-g20s.onrender.com')  // Allow specific origin
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')             // Allow specific methods
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')       // Allow specific headers
+        ->withHeader('Access-Control-Allow-Credentials', 'true');                         // Allow credentials (cookies)
+
+    // Allow the request to proceed
+    return $next($request, $response);
+});
+
+// Handle OPTIONS preflight requests
+$app->options('/{routes:.+}', function ($request, $response, $args) {
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', 'https://cartpage-g20s.onrender.com')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        ->withHeader('Access-Control-Allow-Credentials', 'true')
+        ->withStatus(200);
+});
 
 $app->options('/api/razorpay/create-order', function (Request $request, Response $response) use ($razorpay){
     return addCorsHeaders($response)->withStatus(200);

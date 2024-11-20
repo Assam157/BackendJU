@@ -45,7 +45,7 @@
             "aliases": [],
             "dev": false
         },
-},
+ 
         {
             "name": "laravel/sail",
             "version": "1.16.0",
@@ -65,6 +65,7 @@
                     "Laravel\\Sail\\": "src/"
                 }
             },
+},
 
         {
             "name": "laravel/sanctum",

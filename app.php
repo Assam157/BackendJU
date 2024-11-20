@@ -308,22 +308,7 @@ $app->post('/api/razorpay/verify', function (Request $request, Response $respons
  
  
 // CORS Middleware: Allow all origins and set the proper headers
- $app->add(function ($request, $response, $next) {
-    // Add CORS headers for preflight requests and regular requests
-    $response = $response
-        ->withHeader('Access-Control-Allow-Origin', '*') // You can replace '*' with specific origins if needed
-        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-
-    // Handle OPTIONS preflight requests
-    if ($request->getMethod() === 'OPTIONS') {
-        // Return 200 OK for preflight OPTIONS requests
-        return $response->withStatus(200);
-    }
-
-    // Proceed to the next middleware/handler in the pipeline
-    return $next($request, $response);
-});
+  
 
  
 

@@ -23,7 +23,10 @@ COPY . .
 # Install Laravel dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Expose port 8080
+# Set proper permissions for Laravel storage and cache folders
+RUN chmod -R 775 storage bootstrap/cache
+
+# Expose port 8080 (Laravel uses 8080 in this setup)
 EXPOSE 8080
 
 # Command to run PHP's built-in server (Laravel uses public/index.php)

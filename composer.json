@@ -28,9 +28,6 @@
         "platform": {
             "php": "8.2.12"
         }
-    },
-    "proxy": {
-        "url": "https://backendju-3.onrender.com"
     }
 }
 

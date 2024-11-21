@@ -1,31 +1,37 @@
- # Use the PHP 8.2 FPM image as the base image
+ # Use the PHP base image with FPM
 FROM php:8.2-fpm
 
-# Install system dependencies, curl, unzip, and libraries required by Composer and OpenSSL for SSL support
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
     unzip \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    git \
     libssl-dev \
-    ca-certificates \
     pkg-config \
-    libcurl4-openssl-dev \
     openssl \
-    && rm -rf /var/lib/apt/lists/*
+    nginx \
+    git \
+    vim \
+    nano \
+    libxml2-dev \
+    libcurl4-openssl-dev \
+    zlib1g-dev
 
-# Install PHP extensions required for Laravel (e.g., GD for image processing, etc.)
+# Install PHP extensions required for Laravel
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
-    docker-php-ext-install gd
+    docker-php-ext-install gd \
+    && docker-php-ext-install pdo pdo_mysql
 
-# Install MongoDB PHP extension using PECL
-RUN pecl install mongodb && \
-    docker-php-ext-enable mongodb
+# Install MongoDB extension
+RUN pecl install mongodb && docker-php-ext-enable mongodb
 
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Install Laravel CORS handling package
+RUN composer require fruitcake/laravel-cors
 
 # Set the working directory inside the container
 WORKDIR /var/www/html
@@ -33,33 +39,19 @@ WORKDIR /var/www/html
 # Copy application files into the container
 COPY . .
 
-# Add a new user for running the app and change ownership of the directory to that user
-RUN useradd -ms /bin/bash myuser
-
-# Switch to the 'root' user temporarily for chown
-USER root
-
-# Change the ownership of files and directories to www-data (required for Laravel to work properly)
-RUN chown -R www-data:www-data /var/www/html
-# Switch back to the 'www-data' user for the rest of the operations
-USER www-data
-
 # Install Laravel dependencies using Composer
-RUN /usr/local/bin/composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader
 
-# Ensure the permissions are correct after Composer installation
-RUN chown -R www-data:www-data /var/www/html/vendor
-RUN chmod -R 775 /var/www/html/vendor
+# Set permissions for Laravel storage and cache
+RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
-# Set the port environment variable (this can be changed as needed)
-ENV PORT 8080
+# Copy Nginx configuration file
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose the port to be used by Laravel
-EXPOSE 8080
+# Expose port 80 for Nginx
+EXPOSE 80
 
-# Ensure that necessary directories have the correct permissions for Laravel to write to
-RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache && \
-    chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Start PHP-FPM and Nginx
+CMD ["sh", "-c", "service php8.2-fpm start && nginx -g 'daemon off;'"]
 
-# Use artisan to start the Laravel application on the correct port
-CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"]
+ 

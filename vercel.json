@@ -1,9 +1,9 @@
-{
+ {
   "version": 2,
   "builds": [
     {
-      "src": "public/index.php",
-      "use": "vercel-php-runtime"
+      "src": "Dockerfile",
+      "use": "@vercel/docker"
     }
   ],
   "routes": [

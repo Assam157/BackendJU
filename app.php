@@ -1,4 +1,4 @@
-  <?php
+    <?php
 
 // Autoload dependencies
 require 'vendor/autoload.php';
@@ -13,8 +13,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Razorpay\Api\Api;
  
 
-// Start the session
-session_start();
+ 
  
 $port = getenv('PORT') ?: 8080;
 
@@ -300,40 +299,9 @@ $app->post('/api/razorpay/verify', function (Request $request, Response $respons
 });
  
  
-// CORS Middleware: Allow all origins and set the proper headers
-$app->add(function ($request, $handler) {
-    $response = $handler->handle($request);
-    if ($request->getMethod() === 'OPTIONS') {
-        return $response
-            ->withHeader('Access-Control-Allow-Origin', '*') // Adjust as necessary for security
-            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-            ->withStatus(200); // Return 200 status for OPTIONS request
-    }
-    // Set the CORS headers for the response
-    $response = $response
-        ->withHeader('Access-Control-Allow-Origin', '*') // Allow all origins, adjust as needed
-        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-
-     
-
-    return $response;
-});
  
 
-// DELETE route for deleting a product by ID
- // DELETE route for deleting a product by ID
  
-
-
-// Custom session middleware to ensure session is started
-$app->add(function ($request, $handler) {
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
-    }
-    return $handler->handle($request);
-});
 
 // MongoDB connection
 $mongoClient = new MongoDB\Client(

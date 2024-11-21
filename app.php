@@ -14,7 +14,7 @@ use Razorpay\Api\Api;
  
 
 // Start the session
- 
+session_start();
  
 $port = getenv('PORT') ?: 8080;
 
@@ -309,7 +309,12 @@ $app->add(function ($request, $handler) {
 
 
 // Custom session middleware to ensure session is started
- 
+$app->add(function ($request, $handler) {
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+    return $handler->handle($request);
+});
 
 // MongoDB connection
 $mongoClient = new MongoDB\Client(
@@ -598,7 +603,7 @@ $app->options('/api/products',function (Request $request, Response $response){
 $app->get('/api/products', function (Request $request, Response $response) use ($productCollection) {
     $products = $productCollection->find()->toArray();
     $response->getBody()->write(json_encode($products));
-    return $response->withHeader('Content-Type', 'application/json');
+    return addCorsHeaders($response)->withHeader('Content-Type', 'application/json');
 });
 
 // POST route for handling form submissions
@@ -613,7 +618,7 @@ $app->post('/api/products', function ($request,$response) use ($productCollectio
     if (empty($data['name']) || empty($data['type']) || empty($data['price'])) {
         // Send an error response if data is invalid
         $response->getBody()->write(json_encode(['error' => 'Invalid input']));
-        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        return addCorsHeaders($response)->withStatus(400)->withHeader('Content-Type', 'application/json');
     }
 
     try {
@@ -625,14 +630,14 @@ $app->post('/api/products', function ($request,$response) use ($productCollectio
 
         // Send success response
         $response->getBody()->write(json_encode(['message' => 'Product added successfully']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
+        return addCorsHeaders($response)->withHeader('Content-Type', 'application/json')->withStatus(201);
     } catch (Exception $e) {
         // Log any errors
         error_log("Error inserting product: " . $e->getMessage());
 
         // Send error response
         $response->getBody()->write(json_encode(['error' => 'Error inserting product']));
-        return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
+        return addCorsHeaders($response)->withStatus(500)->withHeader('Content-Type', 'application/json');
     }
 });
  
@@ -643,25 +648,15 @@ $app->post('/api/products', function ($request,$response) use ($productCollectio
 // Home route for testing
 $app->get('/', function ($request, $response) {
     $response->getBody()->write("Home Route Reached Successfully");
-    return $response
-    ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type')
-        ->withStatus(200);;
+    return addCorsHeaders($response);
+     
 });
 $app->options('/', function($request, $response) {
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-        ->withStatus(200);
+    return addCorsHeaders($response);
+         
 });
 $app->options('/submit', function ($request, $response) {
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type')
-        ->withStatus(200);
+    return addCorsHeaders($response);
 });
 $app->post('/submit', function ($request, $response) use ($productCollection) {
     $data = $request->getParsedBody();
@@ -669,10 +664,7 @@ $app->post('/submit', function ($request, $response) use ($productCollection) {
    
 
     // Set CORS headers
-    $response = $response
-        ->withHeader('Access-Control-Allow-Origin', '*')  // Your frontend origin
-        ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type');
+    $response = addCorsHeaders($response); 
 
     // Write the response based on the result from addProduct
     $response->getBody()->write(json_encode($result['body']));
@@ -703,60 +695,41 @@ $app->post('/login', function ($request, $response) use ($userCollection) {
      
 
     $response=CheckData($userCollection, $data, $response);
-    return $response
-    ->withHeader('Access-Control-Allow-Origin', '*')  // Allow all origins, adjust if needed
-    ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-    ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+    return addCorsHeaders($response);
+    
 });
 
 $app->post('/signup',function($request , $response) use ($userCollection){
     $data=$request->getParsedBody();
 
     $response=AddUserData($userCollection,$data,$response);
-    return $response
-    ->withHeader('Access-Control-Allow-Origin', '*')  // Allow all origins, adjust if needed
-    ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-    ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+    return addCorsHeaders($response);
+   
 });
  
 
 $app->options('/login', function($request, $response) {
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-        ->withStatus(200);
+    return addCorsHeaders($response);
 });
 
 $app->options('/signup', function($request, $response) {
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-        ->withStatus(200);
+    return addCorsHeaders($response);
+         
 });
 $app->options('/LogInMayukh', function($request, $response) {
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-        ->withStatus(200);
+    return addCorsHeaders($response);
+        
 });
 $app->options('/LogInInventory', function($request, $response) {
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-        ->withStatus(200);
+    return addCorsHeaders($response);
+         
 });
 $app->post('/LogInInventory',function($request,$response) use ($userCollection){
     $data=$request->getParsedBody();
 
     $response=CheckSuperUserData1($userCollection,$data,$response);
-    return $response
-    ->withHeader('Access-Control-Allow-Origin', '*')
-    ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-    ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    return addCorsHeaders($response);
+ 
 });
  
 
@@ -764,15 +737,15 @@ $app->post('/LogInMayukh',function($request,$response) use ($userCollection){
     $data=$request->getParsedBody();
 
     $response=CheckSuperUserData($userCollection,$data,$response);
-    return $response
-    ->withHeader('Access-Control-Allow-Origin', '*')
-    ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-    ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    return addCorsHeaders($response);
+     
 });
  
  // Helper function to apply CORS headers
+  
+ // Helper function to apply CORS headers
 function addCorsHeaders($response) {
-     $frontend_url = 'https://cartpage-g20s.onrender.com'; // Frontend domain
+    $frontend_url = 'https://cartpage-g20s.onrender.com'; // Frontend domain
 
 // Set CORS headers to allow only the frontend domain
 header("Access-Control-Allow-Origin: $frontend_url"); 
@@ -784,18 +757,16 @@ header("Access-Control-Allow-Credentials: true");
 
 // Handle preflight (OPTIONS) requests
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    header("HTTP/1.1 200 OK");
-    exit;
+   header("HTTP/1.1 200 OK");
+   exit;
 }
 }
  
 
 $app->post("/api/products/modify", function($request, $response) use ($productCollection) {
     // Set CORS headers
-    $response = $response
-        ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    $response = addCorsHeaders($response);
+         
     
     // Handle OPTIONS request
     if ($request->getMethod() === 'OPTIONS') {

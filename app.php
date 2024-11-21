@@ -1,6 +1,5 @@
  <?php
 
- 
 // Autoload dependencies
 require 'vendor/autoload.php';
 
@@ -12,13 +11,11 @@ use Slim\Views\PhpRenderer;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Razorpay\Api\Api;
-use Slim\Middleware\CorsMiddleware;
  
 
 // Start the session
+session_start();
  
- 
-$port = getenv('PORT') ?: 8080;
 
 $razorpayApiKey = "rzp_test_SGmdC8LUxtlgND";   
 $razorpayApiSecret = "T3pymnZ9BZk81wpuoAsLgyOC";  
@@ -199,30 +196,8 @@ $app = AppFactory::create();
 
 // Enable the body parsing middleware (for JSON, form data, etc.)
 $app->addBodyParsingMiddleware();
-
  
-
  
- $app->add(function (Request $request, Psr\Http\Server\RequestHandlerInterface $handler) {
-    // Get the response from the handler
-    $response = $handler->handle($request);
-
-    // Modify the response to include CORS headers
-    $response = $response
-        ->withHeader('Access-Control-Allow-Origin', '*') // Change '*' to a specific origin for security
-        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-
-    // Handle OPTIONS method for preflight requests
-    if ($request->getMethod() === 'OPTIONS') {
-        return $response->withStatus(200);
-    }
-
-    // Return the modified response
-    return $response;
-});
-
-
 
 
  $app->post('/api/razorpay/create-order', function (Request $request, Response $response) use ($razorpay) {
@@ -260,9 +235,7 @@ $app->addBodyParsingMiddleware();
     }
 });
  
-  
- 
- 
+
 $app->options('/api/razorpay/create-order', function (Request $request, Response $response) use ($razorpay){
     return addCorsHeaders($response)->withStatus(200);
 });
@@ -308,8 +281,25 @@ $app->post('/api/razorpay/verify', function (Request $request, Response $respons
  
  
 // CORS Middleware: Allow all origins and set the proper headers
-  
+$app->add(function ($request, $handler) {
+    $response = $handler->handle($request);
+    if ($request->getMethod() === 'OPTIONS') {
+        return $response
+            ->withHeader('Access-Control-Allow-Origin', '*') // Adjust as necessary for security
+            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+            ->withStatus(200); // Return 200 status for OPTIONS request
+    }
+    // Set the CORS headers for the response
+    $response = $response
+        ->withHeader('Access-Control-Allow-Origin', '*') // Allow all origins, adjust as needed
+        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 
+     
+
+    return $response;
+});
  
 
 // DELETE route for deleting a product by ID
@@ -319,15 +309,14 @@ $app->post('/api/razorpay/verify', function (Request $request, Response $respons
 
 // Custom session middleware to ensure session is started
 $app->add(function ($request, $handler) {
-     
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
     return $handler->handle($request);
 });
 
- $mongoClient = new MongoDB\Client(
-    "mongodb+srv://Maitreya:killdill12@cluster0.sk6ugig.mongodb.net/?retryWrites=true&w=majority",
-);
-
-
+// MongoDB connection
+$mongoClient = new MongoClient("mongodb+srv://Maitreya:killdill12@cluster0.sk6ugig.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
 $db = $mongoClient->selectDatabase('my_database');
 $productCollection = $db->selectCollection('products');
 $db1=$mongoClient->selectDatabase('User_Database');
@@ -416,8 +405,7 @@ $app->options('/get_products',function($request,$response){
 $app->options('/update_product_stock',function($request,$response){
     return addCorsHeaders($response)->withStatus(200);
 });
- 
- 
+// Route to fetch all products from the ProductCollection
 $app->get('/get_products', function ($request, $response) use ($productCollection) {
     // Retrieve all products from the collection
     $products = $productCollection->find([]);
@@ -602,9 +590,7 @@ function seedDatabase($productCollection) {
 $app->get('/api/products', function (Request $request, Response $response) use ($productCollection) {
     $products = $productCollection->find()->toArray();
     $response->getBody()->write(json_encode($products));
-    return addCorsHeaders($response)->withHeader('Content-Type', 'application/json')->withHeader('Access-Control-Allow-Origin', '*', 'https://cartpage-g20s.onrender.com') // Allow all origins; replace '*' with specific origin if needed
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');;
+    return $response->withHeader('Content-Type', 'application/json');
 });
 
 // POST route for handling form submissions
@@ -619,9 +605,7 @@ $app->post('/api/products', function ($request,$response) use ($productCollectio
     if (empty($data['name']) || empty($data['type']) || empty($data['price'])) {
         // Send an error response if data is invalid
         $response->getBody()->write(json_encode(['error' => 'Invalid input']));
-        return addCorsHeader($response)->withStatus(400)->withHeader('Content-Type', 'application/json')->withHeader('Access-Control-Allow-Origin', '*', 'https://cartpage-g20s.onrender.com') // Allow all origins; replace '*' with specific origin if needed
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');;
+        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
     }
 
     try {
@@ -669,6 +653,13 @@ $app->delete('/api/products/{name}/{type}', function ($request, $response, $args
         ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
         ->withStatus(200);
     }
+});
+$app->options('/api/products/{name}/{type}', function ($request, $response) {
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', '*') // Allow all origins, adjust as needed
+        ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, DELETE') // Allow DELETE method
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization') // Allow required headers
+        ->withStatus(200); // Return 200 status for OPTIONS request
 });
 
 
@@ -813,10 +804,9 @@ $app->post('/LogInMayukh',function($request,$response) use ($userCollection){
  // Helper function to apply CORS headers
 function addCorsHeaders($response) {
     return $response
-        ->withHeader('Access-Control-Allow-Origin', '*', ) // Allow all origins; replace '*' with specific origin if needed
+        ->withHeader('Access-Control-Allow-Origin', '*') // Allow all origins; replace '*' with specific origin if needed
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-        ->withHeader('Access-Control-Allow-Credentials', 'true');  
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
 
  

@@ -787,7 +787,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     header("HTTP/1.1 200 OK");
     exit;
 }
-
+}
  
 
 $app->post("/api/products/modify", function($request, $response) use ($productCollection) {

@@ -25,19 +25,21 @@ $user_name;
 function addCorsHeaders($response) {
     $frontend_url = 'https://cartpage-g20s.onrender.com'; // Frontend domain
 
-// Set CORS headers to allow only the frontend domain
-header("Access-Control-Allow-Origin: $frontend_url"); 
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Accept, Origin, Authorization");
+    // Set CORS headers to allow only the frontend domain
+    $response = $response->withHeader("Access-Control-Allow-Origin", $frontend_url);
+    $response = $response->withHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    $response = $response->withHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Accept, Origin, Authorization");
 
-// If you're handling cookies or authentication, add:
-header("Access-Control-Allow-Credentials: true"); 
+    // If you're handling cookies or authentication, add:
+    $response = $response->withHeader("Access-Control-Allow-Credentials", "true");
 
-// Handle preflight (OPTIONS) requests
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-   header("HTTP/1.1 200 OK");
-   exit;
-}
+    // Handle preflight (OPTIONS) requests
+    if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+        $response = $response->withStatus(200);
+        return $response; // Return the response after setting the status
+    }
+
+    return $response; // Return the modified response
 }
 function CheckSuperUserData1($userCollection, $data, $response) {
     // Extract name and password from data

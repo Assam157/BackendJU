@@ -772,10 +772,20 @@ $app->post('/LogInMayukh',function($request,$response) use ($userCollection){
  
  // Helper function to apply CORS headers
 function addCorsHeaders($response) {
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*') // Allow all origins; replace '*' with specific origin if needed
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+     $frontend_url = 'https://cartpage-g20s.onrender.com'; // Frontend domain
+
+// Set CORS headers to allow only the frontend domain
+header("Access-Control-Allow-Origin: $frontend_url"); 
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Accept, Origin, Authorization");
+
+// If you're handling cookies or authentication, add:
+header("Access-Control-Allow-Credentials: true"); 
+
+// Handle preflight (OPTIONS) requests
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    header("HTTP/1.1 200 OK");
+    exit;
 }
 
  

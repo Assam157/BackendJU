@@ -22,6 +22,23 @@ $razorpayApiKey = "rzp_test_SGmdC8LUxtlgND";
 $razorpayApiSecret = "T3pymnZ9BZk81wpuoAsLgyOC";  
 $razorpay = new Api($razorpayApiKey, $razorpayApiSecret);
 $user_name;
+function addCorsHeaders($response) {
+    $frontend_url = 'https://cartpage-g20s.onrender.com'; // Frontend domain
+
+// Set CORS headers to allow only the frontend domain
+header("Access-Control-Allow-Origin: $frontend_url"); 
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Accept, Origin, Authorization");
+
+// If you're handling cookies or authentication, add:
+header("Access-Control-Allow-Credentials: true"); 
+
+// Handle preflight (OPTIONS) requests
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+   header("HTTP/1.1 200 OK");
+   exit;
+}
+}
 function CheckSuperUserData1($userCollection, $data, $response) {
     // Extract name and password from data
     $userId = $data['name'] ?? null;
@@ -456,10 +473,10 @@ $app->post('/update_product_stock', function ($request, $response) use ($product
 
     if ($updateResult->getModifiedCount() > 0) {
         $response->getBody()->write(json_encode(['success' => true, 'message' => 'Stock updated successfully']));
-        return addCorsHeaders($response)->withHeader('Content-Type', 'application/json');
+        return addCorsHeaders($response)->withHeader('Content-Type', 'application/json')->withStatus(200);
     } else {
         $response->getBody()->write(json_encode(['success' => false, 'message' => 'No changes made']));
-        return addCorsHeaders($response)->withHeader('Content-Type', 'application/json');
+        return addCorsHeaders($response)->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
 });
 
@@ -598,12 +615,12 @@ function seedDatabase($productCollection) {
 // GET route for fetching all products
  
 $app->options('/api/products',function (Request $request, Response $response){
-    return addCorsHeaders($response)->withHeader('Content-Type', 'application/json');
+    return addCorsHeaders($response)->withHeader('Content-Type', 'application/json')->withStatus(200);
 });
 $app->get('/api/products', function (Request $request, Response $response) use ($productCollection) {
     $products = $productCollection->find()->toArray();
     $response->getBody()->write(json_encode($products));
-    return addCorsHeaders($response)->withHeader('Content-Type', 'application/json');
+    return addCorsHeaders($response)->withHeader('Content-Type', 'application/json')->withStatus(200);
 });
 
 // POST route for handling form submissions
@@ -648,15 +665,15 @@ $app->post('/api/products', function ($request,$response) use ($productCollectio
 // Home route for testing
 $app->get('/', function ($request, $response) {
     $response->getBody()->write("Home Route Reached Successfully");
-    return addCorsHeaders($response);
+    return addCorsHeaders($response)->withStatus(200);
      
 });
 $app->options('/', function($request, $response) {
-    return addCorsHeaders($response);
+    return addCorsHeaders($response)->withStatus(200);
          
 });
 $app->options('/submit', function ($request, $response) {
-    return addCorsHeaders($response);
+    return addCorsHeaders($response)->withStatus(200);
 });
 $app->post('/submit', function ($request, $response) use ($productCollection) {
     $data = $request->getParsedBody();
@@ -695,7 +712,7 @@ $app->post('/login', function ($request, $response) use ($userCollection) {
      
 
     $response=CheckData($userCollection, $data, $response);
-    return addCorsHeaders($response);
+    return addCorsHeaders($response)->withStatus(200);
     
 });
 
@@ -703,32 +720,32 @@ $app->post('/signup',function($request , $response) use ($userCollection){
     $data=$request->getParsedBody();
 
     $response=AddUserData($userCollection,$data,$response);
-    return addCorsHeaders($response);
+    return addCorsHeaders($response)->withStatus(200);
    
 });
  
 
 $app->options('/login', function($request, $response) {
-    return addCorsHeaders($response);
+    return addCorsHeaders($response)->withStatus(200);
 });
 
 $app->options('/signup', function($request, $response) {
-    return addCorsHeaders($response);
+    return addCorsHeaders($response)->withStatus(200);
          
 });
 $app->options('/LogInMayukh', function($request, $response) {
-    return addCorsHeaders($response);
+    return addCorsHeaders($response)->withStatus(200);
         
 });
 $app->options('/LogInInventory', function($request, $response) {
-    return addCorsHeaders($response);
+    return addCorsHeaders($response)->withStatus(200);
          
 });
 $app->post('/LogInInventory',function($request,$response) use ($userCollection){
     $data=$request->getParsedBody();
 
     $response=CheckSuperUserData1($userCollection,$data,$response);
-    return addCorsHeaders($response);
+    return addCorsHeaders($response)->withStatus(200);
  
 });
  
@@ -737,35 +754,19 @@ $app->post('/LogInMayukh',function($request,$response) use ($userCollection){
     $data=$request->getParsedBody();
 
     $response=CheckSuperUserData($userCollection,$data,$response);
-    return addCorsHeaders($response);
+    return addCorsHeaders($response)->withStatus(200);
      
 });
  
  // Helper function to apply CORS headers
   
  // Helper function to apply CORS headers
-function addCorsHeaders($response) {
-    $frontend_url = 'https://cartpage-g20s.onrender.com'; // Frontend domain
-
-// Set CORS headers to allow only the frontend domain
-header("Access-Control-Allow-Origin: $frontend_url"); 
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Accept, Origin, Authorization");
-
-// If you're handling cookies or authentication, add:
-header("Access-Control-Allow-Credentials: true"); 
-
-// Handle preflight (OPTIONS) requests
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-   header("HTTP/1.1 200 OK");
-   exit;
-}
-}
+ 
  
 
 $app->post("/api/products/modify", function($request, $response) use ($productCollection) {
     // Set CORS headers
-    $response = addCorsHeaders($response);
+    $response = addCorsHeaders($response)->withStatus(200);
          
     
     // Handle OPTIONS request

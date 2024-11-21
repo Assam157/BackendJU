@@ -1,6 +1,5 @@
  {
   "dependencies": {
-    "artisan": "^0.1.2",
     "body-parser": "^1.20.3",
     "composer": "^4.1.0",
     "cors": "^2.8.5",

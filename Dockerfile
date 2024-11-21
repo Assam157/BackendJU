@@ -18,19 +18,22 @@ RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     zlib1g-dev
 
-# Install PHP extensions required for Laravel
+# Install PHP extensions required for Laravel (pdo, pdo_mysql, etc.)
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install gd \
     && docker-php-ext-install pdo pdo_mysql
 
-# Install MongoDB extension (if required for your app)
+# Install MongoDB extension
 RUN pecl install mongodb && docker-php-ext-enable mongodb
 
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Install the Laravel CORS package
-RUN composer require fruitcake/laravel-cors
+# Install the Laravel CORS package (if required in your project)
+# RUN composer require fruitcake/laravel-cors  # Uncomment if needed
+
+# Disable output buffering globally (important for header and response issues)
+RUN echo "output_buffering = Off" >> /usr/local/etc/php/conf.d/docker-php.ini
 
 # Set the working directory inside the container
 WORKDIR /var/www/html
@@ -41,13 +44,15 @@ COPY . .
 # Install Laravel dependencies using Composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Set permissions for Laravel storage and cache
-RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
+# Set permissions for Laravel storage and cache directories
+RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www \
+    && chown -R www-data:www-data /var/www/storage && chmod -R 775 /var/www/storage \
+    && chown -R www-data:www-data /var/www/bootstrap/cache && chmod -R 775 /var/www/bootstrap/cache
 
-# Expose port 8000 for the PHP built-in server
-EXPOSE 8000
+# Expose port 8080 (or any port you want to run the app on)
+EXPOSE 8080
 
-# Start PHP's built-in server (no Nginx needed)
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+# Start PHP's built-in server on port 8080 (or 8000 if preferred)
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
 
  

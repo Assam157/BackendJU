@@ -1,7 +1,7 @@
  # Use official PHP image from Docker Hub
 FROM php:8.2-fpm
 
-# Install system dependencies for Laravel
+# Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -14,18 +14,17 @@ RUN apt-get update && apt-get install -y \
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Set working directory
+# Set the working directory inside the container
 WORKDIR /var/www/html
 
-# Copy the project files into the container
+# Copy all project files into the container
 COPY . .
 
-# Install PHP dependencies with Composer
+# Install Laravel dependencies
 RUN composer install --no-dev --optimize-autoloader
 
 # Expose port 8080
 EXPOSE 8080
 
-# Start PHP server
+# Command to run PHP's built-in server (Laravel uses public/index.php)
 CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
-

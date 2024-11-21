@@ -14,7 +14,7 @@ use Razorpay\Api\Api;
  
 
 // Start the session
-session_start();
+ 
  
 $port = getenv('PORT') ?: 8080;
 
@@ -309,12 +309,7 @@ $app->add(function ($request, $handler) {
 
 
 // Custom session middleware to ensure session is started
-$app->add(function ($request, $handler) {
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
-    }
-    return $handler->handle($request);
-});
+ 
 
 // MongoDB connection
 $mongoClient = new MongoDB\Client(
